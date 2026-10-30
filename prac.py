@@ -12,6 +12,13 @@ def create_table():
     Mach_name VARCHAR(100),
     Mach_id VARCHAR(20));
     """)
+    cursor.execute("""CREATE TABLE IF NOT EXISTS admin_log(
+    srno int PRIMARY KEY AUTOINCREMENT,
+    Employee_Name VARCHAR(100),
+    Username int NOT NULL UNIQUE,
+    Password TEXT NOT NULL,
+    Role TEXT NOT NULL;
+    """)
 
 def add_machines():
     connection = connection_db()
@@ -31,6 +38,20 @@ def add_machines():
     connection.commit()
     connection.close()
 
+def add_user():
+    connection = connection_db()
+    cursor = connection.cursor()
+
+    name = input(" ")
+    username = int(input(" ")) 
+    password = input(" ")
+    role = input("")
+    cursor.execute("""INSERT INTO admin_log
+        (name, username, password, role)
+        VALUES (?,?,?,?)""",
+        (name, username, password, role))
+    
+
 def view_log():
     connection = connection_db()
     cursor = connection.cursor()
@@ -44,6 +65,20 @@ def view_log():
         
     print("Database displayed successfully!")
 
+def view_user():
+    connection = connection_db()
+    cursor = connection.cursor()
+    
+    cursor.execute("""SELECT * FROM admin_log""")
+    logs = cursor.fetchall()
+    connection.close()
+    
+    for x in logs:
+        print(x)
+            
+    print("Database displayed successfully!")
+    
+
 def update_machine():
     connection = connection_db()
     cursor = connection.cursor()
@@ -54,6 +89,24 @@ def update_machine():
         SET Mach_name = ?
         WHERE Mach_id = ?""",
         ("a", "Mach_id"))
+
+def update_log():
+    connection = connection_db()
+    cursor = connection.cursor()
+
+    b = input()
+    
+    cursor.execute("""UPDATE admin_log
+        SET  role = ?
+        WHERE username = ?""",
+        ("b", "username"))
+
+def delete_machine():
+    connection = connection_db()
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM machines WHERE username = ? " \
+    " ")
 
 
 
